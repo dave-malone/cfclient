@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/cloudfoundry/cli/plugin"
-	"github.com/pivotalservices/user-migration-plugin/uaa"
+	"github.com/dave-malone/go-uaac"
 )
 
 type cliClient struct {
