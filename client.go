@@ -13,6 +13,6 @@ type Client interface {
 	GetUserSummary(userResource *UserResource) (UserSummaryResource, error)
 	SetOrgRole(orgGuid string, guid uaa.UserGuid, orgRole string) error
 	SetOrgRoles(guid uaa.UserGuid, orgRoles []*OrgRole) error
-	SetSpaceRole(spaceGuid string, spaceRole string, guid uaa.UserGuid) error
-	SetSpaceRoles(guid uaa.UserGuid, spaceRoles []*SpaceRole) error
+	SetSpaceRole(username string, spaceRole *SpaceRole) error
+	SetSpaceRoles(username string, spaceRoles []*SpaceRole) error
 }
