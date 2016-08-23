@@ -1,0 +1,6 @@
+package: github.com/dave-malone/cfclient
+import:
+- package: github.com/cloudfoundry/cli
+  subpackages:
+  - plugin
+- package: github.com/dave-malone/go-uaac

@@ -1,0 +1,11 @@
+hash: 2850eae0220e35f7e72cf8e7d376d33f0b77ceb79a93f41b5b2a5040358ec7f7
+updated: 2016-08-23T16:27:25.312777533-05:00
+imports:
+- name: github.com/cloudfoundry/cli
+  version: 5d1ddc2e64c17482fada9ab97b9a50acec4ad938
+  subpackages:
+  - plugin
+  - plugin/models
+- name: github.com/dave-malone/go-uaac
+  version: 1164c3190ae7d7eb9ad28ecd6e2be04aea00c4ac
+devImports: []
