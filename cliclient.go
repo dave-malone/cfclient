@@ -330,8 +330,10 @@ func (c *cliClient) cfcurl(cliCommandArgs ...string) (data []byte, err error) {
 }
 
 func (c *cliClient) executeCfCommand(cliCommandArgs ...string) (string, error) {
+	fmt.Println("executing cf command: ", cliCommandArgs)
 	output, err := c.cli.CliCommandWithoutTerminalOutput(cliCommandArgs...)
 	if nil != err {
+		fmt.Println("an error occurred when executing command; output: ", output)
 		return "", err
 	}
 
