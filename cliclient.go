@@ -211,50 +211,39 @@ func (c *cliClient) FindOrg(orgName string) (OrgsResponse, error) {
 	return orgsResponse, err
 }
 
-func (c *cliClient) SetSpaceRoles(username string, spaceRoles []*SpaceRole) error {
+func (c *cliClient) SetSpaceRoles(guid uaa.UserGuid, spaceRoles []*SpaceRole) error {
 	for _, spaceRole := range spaceRoles {
-		if err := c.SetSpaceRole(username, spaceRole); err != nil {
-			fmt.Printf("Failed to set space role %s for user %s on space %s and org %s; %v\n", spaceRole.RoleName, username, spaceRole.RoleName, spaceRole.OrgName, err)
+		orgResource, err := c.GetOrgByName(spaceRole.OrgName)
+		if err != nil {
+			log.Println(err.Error())
+			continue
 		}
-		// orgResource, err := c.GetOrgByName(spaceRole.OrgName)
-		// if err != nil {
-		// 	log.Println(err.Error())
-		// 	continue
-		// }
-		//
-		// orgGuid := orgResource.Metadata.GUID
-		// if c.assignedToOrg(guid, orgResource) != true {
-		// 	if err = c.AssociateUserWithOrg(orgGuid, guid); err != nil {
-		// 		fmt.Printf("failed to associate user %s with org %s; %v", guid, spaceRole.OrgName, err)
-		// 	}
-		// 	c.assignUserOrg(guid, orgResource)
-		// }
-		//
-		// spacesResource, err := c.GetSpaceByName(orgGuid, spaceRole.SpaceName)
-		// if err != nil {
-		// 	log.Println(err.Error())
-		// 	continue
-		// }
-		//
-		// spaceGuid := spacesResource.Metadata.GUID
-		// if err := c.SetSpaceRole(spaceGuid, spaceRole.RoleName, guid); err != nil {
-		// 	fmt.Printf("Failed to set space role %s for user %s on space %s and org %s; %v\n", spaceRole.RoleName, guid, spaceRole.RoleName, spaceRole.OrgName, err)
-		// }
+
+		orgGuid := orgResource.Metadata.GUID
+		if c.assignedToOrg(guid, orgResource) != true {
+			if err = c.AssociateUserWithOrg(orgGuid, guid); err != nil {
+				fmt.Printf("failed to associate user %s with org %s; %v", guid, spaceRole.OrgName, err)
+			}
+			c.assignUserOrg(guid, orgResource)
+		}
+
+		spacesResource, err := c.GetSpaceByName(orgGuid, spaceRole.SpaceName)
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+
+		spaceGuid := spacesResource.Metadata.GUID
+		if err := c.SetSpaceRole(spaceGuid, spaceRole.RoleName, guid); err != nil {
+			fmt.Printf("Failed to set space role %s for user %s on space %s and org %s; %v\n", spaceRole.RoleName, guid, spaceRole.RoleName, spaceRole.OrgName, err)
+		}
 	}
 
 	return nil
 }
 
-func (c *cliClient) SetSpaceRole(username string, spaceRole *SpaceRole) error {
-	output, err := c.executeCfCommand("set-space-role", username, spaceRole.OrgName, spaceRole.SpaceName, spaceRole.RoleName)
-	if nil != err {
-		return err
-	}
-
-	fmt.Println("set-space-role response: ", output)
-
-	return nil
-	/*var role string
+func (c *cliClient) SetSpaceRole(spaceGuid string, spaceRole string, guid uaa.UserGuid) error {
+	var role string
 
 	switch spaceRole {
 	case SpaceDeveloper:
@@ -280,7 +269,8 @@ func (c *cliClient) SetSpaceRole(username string, spaceRole *SpaceRole) error {
 	if _, ok := setSpaceRoleResponse["error_code"]; ok {
 		return fmt.Errorf("Error setting space role %v\n", setSpaceRoleResponse)
 	}
-	*/
+
+	return nil
 }
 
 func (c *cliClient) GetSpaceByName(orgGuid string, spaceName string) (*SpaceResource, error) {
@@ -324,27 +314,19 @@ func (c *cliClient) FindSpace(orgGuid string, spaceName string) (SpacesResponse,
 
 func (c *cliClient) cfcurl(cliCommandArgs ...string) (data []byte, err error) {
 	cliCommandArgs = append([]string{"curl"}, cliCommandArgs...)
-	response, err := c.executeCfCommand(cliCommandArgs...)
-
-	return []byte(response), err
-}
-
-func (c *cliClient) executeCfCommand(cliCommandArgs ...string) (string, error) {
-	fmt.Println("executing cf command: ", cliCommandArgs)
 	output, err := c.cli.CliCommandWithoutTerminalOutput(cliCommandArgs...)
 	if nil != err {
-		fmt.Println("an error occurred when executing command; output: ", output)
-		return "", err
+		return nil, err
 	}
 
 	if nil == output || 0 == len(output) {
-		return "", errors.New("CF API returned no output")
+		return nil, errors.New("CF API returned no output")
 	}
 
 	response := strings.Join(output, " ")
 	if 0 == len(response) || "" == response {
-		return "", fmt.Errorf("Failed to join output: %v", output)
+		return nil, errors.New("Failed to join output")
 	}
 
-	return response, err
+	return []byte(response), err
 }
