@@ -1,6 +1,6 @@
 package cf
 
-import "github.com/dave-malone/go-uaac"
+import uaa "github.com/pivotalservices/go-uaac/users"
 
 type Client interface {
 	AssociateUserWithOrg(orgGuid string, guid uaa.UserGuid) error

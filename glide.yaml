@@ -3,4 +3,6 @@ import:
 - package: github.com/cloudfoundry/cli
   subpackages:
   - plugin
-- package: github.com/dave-malone/go-uaac
+- package: github.com/pivotalservices/go-uaac
+  subpackages:
+  - users

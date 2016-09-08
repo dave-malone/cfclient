@@ -1,11 +1,43 @@
-hash: 2850eae0220e35f7e72cf8e7d376d33f0b77ceb79a93f41b5b2a5040358ec7f7
-updated: 2016-08-23T16:27:25.312777533-05:00
+hash: e96056290bffae563cc2ea49f1687fdc0c41437790f22b55714482d9c7e32a40
+updated: 2016-09-08T15:35:48.23158119-05:00
 imports:
+- name: code.cloudfoundry.org/cli
+  version: 4d39ca612e47222f17bebbbe25a0e38316949909
+  subpackages:
+  - plugin/models
 - name: github.com/cloudfoundry/cli
-  version: 5d1ddc2e64c17482fada9ab97b9a50acec4ad938
+  version: 4d39ca612e47222f17bebbbe25a0e38316949909
   subpackages:
   - plugin
-  - plugin/models
-- name: github.com/dave-malone/go-uaac
-  version: 1164c3190ae7d7eb9ad28ecd6e2be04aea00c4ac
+- name: github.com/golang/protobuf
+  version: 874264fbbb43f4d91e999fecb4b40143ed611400
+  repo: https://github.com/golang/protobuf
+  subpackages:
+  - proto
+  - ptypes/any
+- name: github.com/pivotalservices/go-uaac
+  version: 37bfd46e5e1d71e377df7d02fa5b89b72b84fd94
+  subpackages:
+  - users
+- name: golang.org/x/net
+  version: 3797cd8864994d713d909eda5e61ede8683fdc12
+  repo: https://go.googlesource.com/net
+  subpackages:
+  - websocket
+  - context
+- name: golang.org/x/oauth2
+  version: 3c3a985cb79f52a3190fbc056984415ca6763d01
+  subpackages:
+  - clientcredentials
+  - internal
+- name: google.golang.org/appengine
+  version: 4f7eeb5305a4ba1966344836ba4af9996b7b4e05
+  subpackages:
+  - urlfetch
+  - internal
+  - internal/urlfetch
+  - internal/base
+  - internal/datastore
+  - internal/log
+  - internal/remote_api
 devImports: []
